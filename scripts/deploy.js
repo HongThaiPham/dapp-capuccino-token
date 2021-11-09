@@ -6,20 +6,20 @@
 const hre = require("hardhat");
 
 async function main() {
-  // Hardhat always runs the compile task when running scripts with its command
-  // line interface.
-  //
-  // If this script is run directly using `node` you may want to call compile
-  // manually to make sure everything is compiled
-  // await hre.run('compile');
-
-  // We get the contract to deploy
+  const accounts = await hre.ethers.getSigners();
   const MyToken = await hre.ethers.getContractFactory("MyToken");
   const token = await MyToken.deploy(1000000000);
 
-  await token.deployed();
+  let tokenInstance = await token.deployed();
+  console.log("Token deployed to:", token.address);
+
+  const MyTokenSales = await hre.ethers.getContractFactory("MyTokenSale");
+  const tokenSale = await MyTokenSales.deploy(1, accounts[0], MyToken.address);
+  await tokenSale.deployed();
 
   console.log("Token deployed to:", token.address);
+
+  await tokenInstance.transfer(MyTokenSales.address, 1000000000);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
