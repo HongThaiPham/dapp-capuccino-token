@@ -13,8 +13,17 @@ async function main() {
   let tokenInstance = await token.deployed();
   console.log("Token deployed to:", token.address);
 
+  const KycContract = await hre.ethers.getContractFactory("KycContract");
+  const kycContract = await KycContract.deploy();
+  await kycContract.deployed();
+
   const MyTokenSales = await hre.ethers.getContractFactory("MyTokenSale");
-  const tokenSale = await MyTokenSales.deploy(1, accounts[0], MyToken.address);
+  const tokenSale = await MyTokenSales.deploy(
+    1,
+    accounts[0],
+    MyToken.address,
+    kycContract.address
+  );
   await tokenSale.deployed();
 
   console.log("Token deployed to:", token.address);
