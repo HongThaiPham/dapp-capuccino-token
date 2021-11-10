@@ -14,25 +14,27 @@ const getWeb3 = () =>
           const signer = provider.getSigner();
           const account = await signer.getAddress();
           const myToken = new ethers.Contract(
-            "0x3F6E5975072CeC9120280F7Fc1a5DBc10e0Ab09D",
+            process.env.NEXT_PUBLIC_TOKEN,
             MyToken.abi,
             signer
           );
 
           const myKycContract = new ethers.Contract(
-            "0x14e735df290B56cfbCb13F47Ca30904353F0574D",
+            process.env.NEXT_PUBLIC_KYC,
             KycContract.abi,
             signer
           );
 
           const myTokenSales = new ethers.Contract(
-            "0x5BE2293aBdD5DdF541C1512712b7c332cfCDc0BC",
+            process.env.NEXT_PUBLIC_TOKEN_SALE,
             MyTokenSales.abi,
             signer
           );
 
           // Request account access if needed
-          await window.ethereum.enable();
+          await window.ethereum.request({
+            method: "eth_requestAccounts",
+          });
           // Accounts now exposed
           resolve({ account, myToken, myKycContract, myTokenSales });
         } catch (error) {

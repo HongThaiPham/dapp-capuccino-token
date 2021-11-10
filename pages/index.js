@@ -3,31 +3,40 @@ import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import getWeb3 from "../libs/getWeb3";
 import { useEffect, useState } from "react";
+import { ethers } from "ethers";
 
 export default function Home() {
   const [web3, setWeb3] = useState();
   const [loading, setLoading] = useState(true);
   const [kycAddress, setkycAddress] = useState("");
+  const [userTokens, setUserTokens] = useState(0);
+
   async function init() {
     setLoading(true);
     try {
-      setWeb3(await getWeb3());
+      const web3Temp = await getWeb3();
+
+      setWeb3(web3Temp);
       setLoading(false);
+
+      updateUserTokens(web3Temp);
+      listenToTokenTransfer(web3Temp);
     } catch (error) {
-      console.log(error.message);
+      console.log(error);
     }
   }
   useEffect(() => {
     init();
+    window.ethereum.on("accountsChanged", function (accounts) {
+      window.location.reload();
+    });
   }, []);
 
   const handleKycSubmit = async () => {
-    console.log(web3);
     const xxx = await web3.myKycContract.setKycCompleted(kycAddress);
 
     alert("Account " + kycAddress + " is now whitelisted");
     const yyy = await web3.myKycContract.kycCompleted(kycAddress);
-    console.log(yyy);
   };
 
   const handleMetamask = async () => {
@@ -36,6 +45,35 @@ export default function Home() {
     });
     window.location.reload();
   };
+
+  const handleBuyToken = async () => {
+    const tx = await web3.myTokenSales.buyTokens(web3.account, {
+      value: ethers.utils.parseEther("1"),
+    });
+    if (tx) {
+      alert("Buy 1 more token");
+    }
+  };
+
+  const updateUserTokens = async (contract) => {
+    const webContract = web3 || contract;
+    const userTokens = await webContract.myToken.balanceOf(webContract.account);
+    setUserTokens(ethers.utils.formatEther(userTokens.toString()));
+  };
+  const listenToTokenTransfer = async (contract) => {
+    const webContract = web3 || contract;
+    webContract.myToken.on("Transfer", (from, to, amout) => {
+      updateUserTokens(contract);
+      // console.log({
+      //   from,
+      //   to,
+      //   amout: ethers.utils.formatEther(amout.toString()),
+      // });
+    });
+    // .Transfer({ to: this.accounts[0] })
+    // .on("data", this.updateUserTokens);
+  };
+
   return (
     <div className={styles.container}>
       <Head>
@@ -68,6 +106,10 @@ export default function Home() {
             </button>
             <h2>Buy Cappucino-Tokens</h2>
             <p>Send Ether to this address: {web3.myTokenSales.address}</p>
+            <p>You have: {userTokens}</p>
+            <button type="button" onClick={handleBuyToken}>
+              Buy more tokens
+            </button>
           </div>
         )}
       </main>
