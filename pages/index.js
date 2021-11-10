@@ -44,6 +44,7 @@ export default function Home() {
         ) : (
           <div className="App">
             <h1>Capuccino Token sale for StarDucks</h1>
+            <h2>Capuccino Token contract: {web3.myToken.address}</h2>
             <h2>Enable your account</h2>
             Address to allow:{" "}
             <input

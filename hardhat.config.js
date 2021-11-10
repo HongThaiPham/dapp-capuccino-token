@@ -16,6 +16,10 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 /**
  * @type import('hardhat/config').HardhatUserConfig
  */
+
+const ACCOUNT_PRIVATE_KEY = "";
+
+const INFURA_ID = "";
 module.exports = {
   solidity: "0.8.4",
   paths: {
@@ -24,6 +28,10 @@ module.exports = {
   networks: {
     hardhat: {
       chainId: 1337,
+    },
+    rinkeby_infura: {
+      url: `https://rinkeby.infura.io/v3/${INFURA_ID}`,
+      accounts: [`0x${ACCOUNT_PRIVATE_KEY}`],
     },
   },
 };

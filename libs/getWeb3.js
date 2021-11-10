@@ -15,19 +15,19 @@ const getWeb3 = () =>
           console.log(signer);
           const account = await signer.getAddress();
           const myToken = new ethers.Contract(
-            "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
+            "0x3F6E5975072CeC9120280F7Fc1a5DBc10e0Ab09D",
             MyToken.abi,
             signer
           );
 
           const myKycContract = new ethers.Contract(
-            "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318",
+            "0x14e735df290B56cfbCb13F47Ca30904353F0574D",
             KycContract.abi,
             signer
           );
 
           const myTokenSales = new ethers.Contract(
-            "0x610178dA211FEF7D417bC0e6FeD39F05609AD788",
+            "0x5BE2293aBdD5DdF541C1512712b7c332cfCDc0BC",
             MyTokenSales.abi,
             signer
           );
