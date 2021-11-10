@@ -29,6 +29,13 @@ export default function Home() {
     const yyy = await web3.myKycContract.kycCompleted(kycAddress);
     console.log(yyy);
   };
+
+  const handleMetamask = async () => {
+    await window.ethereum.request({
+      method: "eth_requestAccounts",
+    });
+    window.location.reload();
+  };
   return (
     <div className={styles.container}>
       <Head>
@@ -39,7 +46,10 @@ export default function Home() {
       <main className={styles.main}>
         {loading ? (
           <div>
-            Loading Web3, accounts, and contract.... Please connect Metamask
+            Loading Web3, accounts, and contract.... Please{" "}
+            <button type="button" onClick={handleMetamask}>
+              connect Metamask
+            </button>
           </div>
         ) : (
           <div className="App">

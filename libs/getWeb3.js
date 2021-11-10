@@ -12,7 +12,6 @@ const getWeb3 = () =>
         try {
           const provider = new ethers.providers.Web3Provider(window.ethereum);
           const signer = provider.getSigner();
-          console.log(signer);
           const account = await signer.getAddress();
           const myToken = new ethers.Contract(
             "0x3F6E5975072CeC9120280F7Fc1a5DBc10e0Ab09D",
